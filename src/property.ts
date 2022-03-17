@@ -5,154 +5,15 @@
  */
 
 import { ComponentProperty } from "./declare";
-
-const parseType = (type: string, property: ComponentProperty): string | undefined => {
-
-    if (property.autoType) {
-        return undefined;
-    }
-
-    return type;
-};
-
-export const createComponentArgTypeTable = (property: ComponentProperty): any => {
-
-    switch (property.type) {
-
-        case 'array': return {
-            type: {
-                summary: parseType('array', property),
-                detail: property.typeDetail,
-            },
-            defaultValue: {
-                summary: Array.isArray(property.defaultValue)
-                    ? property.defaultValue.join(', ')
-                    : undefined,
-            },
-        };
-        case 'boolean': return {
-            type: {
-                summary: parseType('boolean', property),
-                detail: property.typeDetail,
-            },
-            defaultValue: {
-                summary: property.defaultValue,
-            },
-        };
-        case 'color': return {
-            type: {
-                summary: parseType('string (Color)', property),
-                detail: property.typeDetail,
-            },
-            defaultValue: {
-                summary: property.defaultValue,
-            },
-        };
-        case 'date': return {
-            type: {
-                summary: parseType('Date', property),
-                detail: property.typeDetail,
-            },
-            defaultValue: {
-                summary: property.defaultValue,
-            },
-        };
-        case 'enum': {
-
-            const detail: string[] = [
-                'Options',
-                ...property.options.map((option: string) => `- ${option}`),
-            ];
-
-            if (typeof property.typeDetail === 'string') {
-
-                detail.unshift('---');
-                detail.unshift(property.typeDetail);
-            }
-
-            return {
-                type: {
-                    summary: parseType('enum', property),
-                    detail: detail.join('\n'),
-                },
-                defaultValue: {
-                    summary: property.defaultValue,
-                },
-            };
-        }
-        case 'enum-list': {
-
-            const detail: string[] = [
-                'Options',
-                ...property.options.map((option: string) => `- ${option}`),
-            ];
-
-            if (typeof property.typeDetail === 'string') {
-
-                detail.unshift('---');
-                detail.unshift(property.typeDetail);
-            }
-
-            return {
-                type: {
-                    summary: parseType('enum list', property),
-                    detail: detail.join('\n'),
-                },
-                defaultValue: {
-                    summary: Array.isArray(property.defaultValue)
-                        ? property.defaultValue.join(', ')
-                        : undefined,
-                },
-            };
-        }
-        case 'file': return {
-            type: {
-                summary: parseType('File', property),
-                detail: property.typeDetail,
-            },
-        };
-        case 'function': return {
-            type: {
-                summary: parseType('function', property),
-                detail: property.typeDetail,
-            },
-            defaultValue: {
-                summary: property.defaultBehavior,
-            },
-        };
-        case 'number': return {
-            type: {
-                summary: parseType('number', property),
-                detail: property.typeDetail,
-            },
-            defaultValue: {
-                summary: property.defaultValue,
-            },
-        };
-        case 'object': return {
-            type: {
-                summary: parseType('object', property),
-                detail: property.typeDetail,
-            },
-            defaultValue: property.defaultValue,
-        };
-        case 'string': return {
-            type: {
-                summary: parseType('string', property),
-                detail: property.typeDetail,
-            },
-            defaultValue: {
-                summary: property.defaultValue,
-            },
-        };
-    }
-};
+import { createComponentArgTypeTable } from "./property-table";
+import { createComponentArgTypeType } from "./property-type";
 
 export const createComponentArgType = (property: ComponentProperty): any => {
 
     const baseArgType = {
 
         description: property.description,
+        type: createComponentArgTypeType(property),
         table: createComponentArgTypeTable(property),
     };
 

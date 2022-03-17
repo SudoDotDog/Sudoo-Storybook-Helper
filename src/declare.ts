@@ -96,6 +96,7 @@ export type ComponentPropertyTypes =
 export type ComponentProperty = {
 
     readonly description: string;
+    readonly required?: boolean;
     readonly typeDetail?: string;
     readonly autoType?: boolean;
 } & ComponentPropertyTypes;
